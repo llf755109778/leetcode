@@ -1,0 +1,35 @@
+1. 字典树Trie 208
+    struct TreeNode {
+        bool isEnd;    //结点值
+        TreeNode* children[NUM];    //指向孩子结点
+    };
+2. 找出第 K 大 位置：
+    1.堆排序大小K，小了删除
+    2.快排
+    int partitionSort(vector<int>& nums, int l, int  r) {
+        // [l,r);
+        int pivot = nums[r-1];
+        int tmp = r;
+        for(int i = tmp - 2; i >= l; --i){
+            if(nums[i]>pivot){
+                --r;  // 交换关键
+                swap(nums[i], nums[r-1]);
+            }
+        }
+        swap(nums[tmp-1], nums[r-1]);   //交换关键
+        return tmp - r;
+    }
+
+3. 如何求一个数(2进制)中连续最多的1？
+    小技巧：每次将这个数和它左移一位后的数相与，直到它变成 0，记录操作次数，这个操作次数就是连续最多的 1。
+        举个例子：
+        对于数字 10101010，将这个数和它左移一位后的数相与，操作1次，这个数就变成 0 了，连续最多的 1只有 1 个；
+        对于数字 10101110，操作 1 次得到 00001100，还需再操作2次才能得到 0，所以连续最多的 1是 3；
+        相当于每次都错一位相与，所以这个数最多有几个连续的 1，就能错一位相与几次才能得到 0。
+        代码
+            def getWidth(self,num):  #步骤3：求一个数中连续最多的1
+                w=0
+                while num>0:
+                    num&=num<<1
+                    w+=1
+                return w

@@ -1,0 +1,55 @@
+1.链表里操作最难掌握的应该就是各种断链啊，然后再挂接啊。在这里，我们主要用到链表操作的两个技术：
+    merge(l1, l2)，双路归并，我相信这个操作大家已经非常熟练的，就不做介绍了。
+    cut(l, n)，可能有些同学没有听说过，它其实就是一种 split 操作，即断链操作。不过我感觉使用 cut 更准确一些，它表示，将链表 l 切掉前 n 个节点，并返回后半部分的链表头。
+    额外再补充一个 dummyHead 大法，已经讲过无数次了，仔细体会吧。
+    ListNode* cut(ListNode* head, int n) {
+        auto p = head;
+        while (--n && p) {
+            p = p->next;
+        }
+
+        if (!p) return nullptr;
+
+        auto next = p->next;
+        p->next = nullptr;
+        return next;
+    }
+
+    ListNode* merge(ListNode* l1, ListNode* l2) {
+        ListNode dummyHead(0);
+        auto p = &dummyHead;
+        while (l1 && l2) {
+            if (l1->val < l2->val) {
+                p->next = l1;
+                p = l1;
+                l1 = l1->next;
+            } else {
+                p->next = l2;
+                p = l2;
+                l2 = l2->next;
+            }
+        }
+        p->next = l1 ? l1 : l2;
+        return dummyHead.next;
+    }
+
+2. 最小栈  155B
+3. 环形链表 142 / 相交链表 160 可以相互转换
+4. 随机/Boyer-Moore(摩尔投票法:消消乐思想)  226(N/3)  169(N/2)
+    个人理解摩尔投票法本质上就是宾果消消乐游戏，每次消除3个不同的数。由于数组长度为n，因此消消乐最多进行[n/3]次。
+    因此，我们想要的答案（超过[n/3]的数字）一定没有被消除完，一定存在最后活下来的两个数当中。
+    但是，存活的两个数不一定都是想要的真正的答案，最后再遍历确认一下这两个数是不是答案即可。
+    //摩尔投票法
+    int help2(vector<int> &vector) {
+        int count = 0;
+        int select = -1;
+        for(auto i:vector){
+            if(i==select){
+                ++count;
+            } else if (--count < 0) {
+                select = i;
+                count = 1;
+            }
+        }
+        return select;
+    }
